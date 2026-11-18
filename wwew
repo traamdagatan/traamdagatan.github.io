@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Assessments</title>
+<style>
+: root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f4f6fa;--surface:#ffffff;--ink:#16213a;--muted:#5b6578;--line:#d9dfea;
+  --accent:#1f4fd8;--accent-ink:#ffffff;--ok:#157347;--warn:#a15c00;--bar:#16213a;
+  --bar-ink:#f4f6fa;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1524;--surface:#18203a;--ink:#e8ecf6;--muted:#a3adc4;--line:#2b3555;
+    --accent:#7aa2ff;--accent-ink:#0f1524;--ok:#5fd394;--warn:#f0b35a;--bar:#0a0f1d;--bar-ink:#e8ecf6;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1524;--surface:#18203a;--ink:#e8ecf6;--muted:#a3adc4;--line:#2b3555;
+  --accent:#7aa2ff;--accent-ink:#0f1524;--ok:#5fd394;--warn:#f0b35a;--bar:#0a0f1d;--bar-ink:#e8ecf6;
+}
+html{color-scheme:light dark;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;line-height:1.2;margin:0}
+nav{background:var(--bar);color:var(--bar-ink);display:flex;gap:4px;padding:0 16px;overflow-x:auto}
+nav a{color:inherit;text-decoration:none;padding:14px 14px;font-weight:600;white-space:nowrap}
+nav a:hover,nav a:focus-visible{background:rgba(255,255,255,.12);outline:none}
+main{max-width:880px;margin:0 auto;padding:32px 20px 64px}
+.hero h1{font-size:clamp(1.9rem,5vw,2.8rem);font-weight:700}
+.hero p{color:var(--muted);max-width:60ch;margin:12px 0 0}
+.who{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+label{display:flex;flex-direction:column;font-size:.85rem;color:var(--muted);gap:4px;flex:1 1 200px}
+input,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0;width:100%}
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:28px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.stat b{display:block;font:700 1.7rem "Source Serif 4",Georgia,serif}
+.stat span{color:var(--muted);font-size:.9rem}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
+.progress i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+h2.sec{font-size:1.4rem;margin:32px 0 12px}
+.card{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:8px;padding:18px;margin-bottom:14px}
+.card.s-progress{border-left-color:var(--warn)}
+.card.s-done{border-left-color:var(--ok)}
+.card h3{font-size:1.15rem}
+.card p{color:var(--muted);margin:6px 0 14px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;align-items:end}
+.fields .wide{grid-column:1/-1}
+.row{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:8px 14px;font:600 .95rem inherit;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn[aria-disabled="true"]{opacity:.4;pointer-events: none}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+.course{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px}
+.course p{margin:8px 0 0;max-width:68ch}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:.9rem;margin-top:32px}
+</style>
+</head>
+<body>
+<nav aria-label="Main">
+  <a href="#home">Home</a>
+  <a href="#assessments">Assessments</a>
+  <a href="#course">The course</a>
+</nav>
+<main>
+  <section class="hero" id="home">
+    <h1>My Assessments</h1>
+    <p>One place to keep track of every assignment for CS 1130 – Introduction to Computing: your status, your published page link, and your score once it’s graded.</p>
+    <div class="who">
+      <label>Your name<input id="name" placeholder="e.g. Juan Dela Cruz" autocomplete="name"></label>
+      <label>Your site address (GitHub or W3Spaces)<input id="site" type="url" placeholder="https://username.github.io/"></label>
+      <label style="flex:0 0 auto;justify-content:flex-end"><a id="siteBtn" class="btn ghost" href="#" target="_blank" rel="noopener" aria-disabled="true">Open my site</a></label>
+    </div>
+  </section>
+
+  <section class="summary" aria-label="Summary">
+    <div class="stat"><b id="sDone">0 / 4</b><span>assignments submitted</span><div class="progress"><i id="bar"></i></div></div>
+    <div class="stat"><b id="sDays">–</b><span id="sDaysLabel">until November 24, 2026</span></div>
+    <div class="stat"><b id="sAvg">–</b><span>average score so far</span></div>
+  </section>
+
+  <h2 class="sec" id="assessments">Assignments</h2>
+  <div id="list"></div>
+
+  <h2 class="sec" id="course">The course</h2>
+  <div class="course">
+    <h3>CS 1130 – Introduction to Computing</h3>
+    <p>HTML, JavaScript and CSS examples with basic functions, user interaction, calculations and page layouts. Upload each finished page to your GitHub or W3Spaces site, then paste its link above.</p>
+  </div>
+
+  <footer>
+    <span>Everything is saved in this browser only.</span>
+    <button class="btn ghost" id="theme" type="button">Switch theme</button>
+  </footer>
+</main>
+
+<script>
+(function(){
+  var DUE=new Date(2026,10,24,23,59,59);
+  var ASSIGN=[
+    {id:"a1",t:"Assignment #1 – Conversion",d:"Celsius to Fahrenheit, Fahrenheit to Celsius, Meters to Feet, Feet to Meters."},
+    {id:"a2",t:"Assignment #2 – Income Tax Calculator",d:"Compute income tax from the user’s input."},
+    {id:"a3",t:"Assignment #3 – Natural Numbers",d:"Factorial (while loop), Sum (do while loop) and Average (for loop) of the first N natural numbers."},
+    {id:"a4",t:"Assignment #4 – Simple Payroll",d:"Compute a simple payroll from the user’s input."}
+  ];
+  var KEY="cs1130-assessments";
+  var data={name:"",site:"",items:{}};
+  try{var raw=localStorage.getItem(KEY);if(raw){data=Object.assign(data,JSON.parse(raw));}}catch(e){}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+  function item(id){return data.items[id]||(data.items[id]={status:"todo",url:"",score:""});}
+  function safeUrl(u){return /^https?:\/\//i.test(u)?u:"";}
+  var $=function(s){return document.querySelector(s);};
+
+  var list=$("#list");
+  ASSIGN.forEach(function(a){
+    var c=document.createElement("article");
+    c.className="card";c.id=a.id;
+    c.innerHTML='<h3></h3><p></p><div class="fields">'+
+      '<label>Status<select data-k="status"><option value="todo">Not started</option><option value="progress">In progress</option><option value="done">Submitted</option></select></label>'+
+      '<label>Score (optional)<input data-k="score" inputmode="decimal" placeholder="e.g. 95"></label>'+
+      '<label class="wide">Page link<span class="row"><input data-k="url" type="url" placeholder="https://username.github.io/assignment1.html"><a class="btn" target="_blank" rel="noopener" href="#" aria-disabled="true">Open</a></span></label></div>';
+    c.querySelector("h3").textContent=a.t;
+    c.querySelector("p").textContent=a.d;
+    list.appendChild(c);
+    c.querySelectorAll("[data-k]").forEach(function(el){
+      var k=el.getAttribute("data-k");el.value=item(a.id)[k]||"";
+      el.addEventListener("input",function(){item(a.id)[k]=el.value.trim?el.value.trim():el.value;save();render();});
+    });
+  });
+
+  function render(){
+    var done=0,sum=0,n=0;
+    ASSIGN.forEach(function(a){
+      var it=item(a.id),c=document.getElementById(a.id);
+      c.className="card"+(it.status==="done"?" s-done":it.status==="progress"?" s-progress":"");
+      var link=c.querySelector("a.btn"),u=safeUrl(it.url);
+      link.href=u||"#";link.setAttribute("aria-disabled",u?"false":"true");
+      if(it.status==="done")done++;
+      var s=parseFloat(it.score);if(!isNaN(s)){sum+=s;n++;}
+    });
+    $("#sDone").textContent=done+" / "+ASSIGN.length;
+    $("#bar").style.width=(done/ASSIGN.length*100)+"%";
+    $("#sAvg").textContent=n?(Math.round(sum/n*10)/10):"–";
+    var days=Math.ceil((DUE-new Date())/86400000);
+    if(done===ASSIGN.length){$("#sDays").textContent="All set";$("#sDaysLabel").textContent="every assignment submitted";}
+    else if(days>=0){$("#sDays").textContent=days+(days===1?" day":" days");$("#sDaysLabel").textContent="until November 24, 2026 (extended)";}
+    else{$("#sDays").textContent="Past due";$("#sDaysLabel").textContent="deadline was November 24, 2026";}
+    var su=safeUrl(data.site),b=$("#siteBtn");b.href=su||"#";b.setAttribute("aria-disabled",su?"false":"true");
+  }
+
+  var nm=$("#name"),st=$("#site");nm.value=data.name||"";st.value=data.site||"";
+  nm.addEventListener("input",function(){data.name=nm.value;save();document.title=(nm.value?nm.value+" – ":"")+"My Assessments";});
+  st.addEventListener("input",function(){data.site=st.value.trim();save();render();});
+  if(data.name)document.title=data.name+" – My Assessments";
+
+  $("#theme").addEventListener("click",function(){
+    var r=document.documentElement,dark=getComputedStyle(r).getPropertyValue("--bg").trim()==="#0f1524";
+    r.setAttribute("data-theme",dark?"light":"dark");
+  });
+  render();
+})();
+</script>
+</body>
+</html>
